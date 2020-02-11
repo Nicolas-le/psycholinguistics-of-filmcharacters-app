@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Case Study</title>
+    <link rel="stylesheet" href="static/css/casestudy.css">
+</head>
+
+<body id="casestudyBody">
+    {% extends "templates.html" %}
+    {% block content %}
+
+
+    <h1 id="caseHeadline"> case study</h1>
+
+    <embed src="static/pdf/TarantinoCharacterPaper.pdf" type="application/pdf" id="paper"/>
+
+
+    <footer class="fixed_footer" id="casestudyFooter">
+      <div class="content">
+        <h3>© Nicolas Ruth, Julian Fuchs | 2019</h3>
+          <p class="small">
+            EN: This work was realized as part of the course "Drama Mining und Film-Analyse" (summer semester 2019) under the supervision of Manuel Burghardt and Jochen Tiepmar at the University of Leipzig.</br>
+            DE: Diese Arbeit wurde im Rahmen des Kurses "Drama Mining und Film-Analyse" (Sommersemester 2019) unter der Leitung von Manuel Burghardt und Jochen Tiepmar an der Universität Leipzig realisiert.</br>
+          </p>
+      </div>
+    </footer>
+
+
+        {% endblock %}
+</body>
+</html>

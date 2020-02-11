@@ -1,0 +1,39 @@
+#caseHeadline{
+    font-family: 'Arial',sans-serif; font-size: 95px;
+    padding-top: 10px;
+    color: #FFF;
+    position: center;
+}
+
+#paper {
+
+    width: 100%;
+    position: relative;
+    margin-right: 0px;
+    padding-top: 5px
+}
+
+#casestudyBody {
+    background-image: url("background2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#casestudyFooter{
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 15%;
+  background: #B0B0B0;
+}
+
+html, body, #paper {
+    min-height: 100% !important;
+    height: 100%;
+}
+

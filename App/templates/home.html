@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="static/css/frontpage.css">
+  </head>
+  {% extends "templates.html" %}
+    {% block content %}
+
+  <body id="frontpageBody">
+
+  <div id="page-container">
+    <div id="content-wrap">
+      <h1 id="startscreen" > Archetypes and <br/> psychological profiles  </h1>
+      <h1 id="startscreen2"> A study about the connection of psychological fingerprints and archetyp structures.   </h1>
+
+      <div id="booton" class="container">
+          <a href="{{ url_for('tarantino') }}" class="btn btn-5">Quentin Tarantino</a>
+          <a href="{{ url_for('other') }}" class="btn btn-5">Mixed directors</a>
+          <a href="{{ url_for('continued') }}" class="btn btn-5">. . .</a>
+      </div>
+  </div>
+
+    <footer class="fixed_footer">
+      <div class="content">
+        <h3>© Nicolas Ruth, Julian Fuchs | 2019</h3>
+          <p class="small">
+            EN: This work was realized as part of the course "Drama Mining und Film-Analyse" (summer semester 2019) under the supervision of Manuel Burghardt and Jochen Tiepmar at the University of Leipzig.</br>
+            DE: Diese Arbeit wurde im Rahmen des Kurses "Drama Mining und Film-Analyse" (Sommersemester 2019) unter der Leitung von Manuel Burghardt und Jochen Tiepmar an der Universität Leipzig realisiert.</br>
+          </p>
+      </div>
+    </footer>
+
+  </div>
+    {% endblock %}
+
+  </body>
+
+
+</html>

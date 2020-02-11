@@ -1,0 +1,27 @@
+ <!DOCTYPE html>
+<html lang="en" dir="ltr">
+ <head>
+   <meta charset="utf-8">
+   <title>Flask Parent Template</title>
+           <link rel="stylesheet" href="static/css/stylesheet.css">
+ </head>
+ <body>
+    <header>
+
+        <nav class="menu">
+      <ul class="menu__list">
+        <li class="menu__group"><a href="{{ url_for('home') }}" class="menu__link">Home</a></li>
+        <li class="menu__group"><a href="{{ url_for('tarantino') }}" class="menu__link">Tarantino</a></li>
+        <li class="menu__group"><a href="{{ url_for('other') }}" class="menu__link">Other Films & Series</a></li>
+        <li class="menu__group"><a href="{{ url_for('casestudy') }}" class="menu__link">case study</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+    </header>
+    
+    {% block content %}
+    {% endblock %}
+    
+ </body>
+</html>

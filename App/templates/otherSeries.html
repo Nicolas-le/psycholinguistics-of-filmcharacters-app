@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Other</title>
+    <script src="http://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="static/css/otherSeries.css">
+    <style>
+
+    .links line {
+      stroke: #999;
+    }
+
+    .nodes circle {
+      stroke: #d3d3d3;
+      stroke-width: 2.5px;
+
+    }
+    .node title {
+
+      pointer-events: none;
+      font-size: 50px;
+    }
+
+    div.tooltip {
+        position: absolute;
+        text-align: left;
+        width: 60%;
+        line-height: 40px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: gold;
+        border: 0px;
+        border-radius: 10px;
+        pointer-events: none;
+    }
+
+
+    </style>
+
+</head>
+{% extends "templates.html" %}
+{% block content %}
+<body id="tarantinoBody">
+
+<div id="page-container">
+    <div id="content-wrap">
+        <div id="chRelations">
+            <h1 id="absoluteHeadline"> Psychological factors  </br>  of various films & series</h1>
+
+            <form class="form-inline" method="POST" action="{{ url_for('other') }}">
+                <div class="form-group">
+                    <div id="filmselector" class="input-group">
+                        <h1>film selector</h1>
+                        <select name="comp_select" class="selectpicker form-control">
+                            {% for o in titles %}
+                            <option value="{{ o.title }}">{{ o.title }}</option>
+                            {% endfor %}
+                        </select>
+                 <button type="submit" class="dropbtn">Go</button>
+                    </div>
+
+                </div>
+            </form>
+
+            <div style="clear:both;"></div>
+            <h1 id="relC">relation of characters</h1>
+            <div style="clear:both;"></div>
+
+            <div id="networkAlgos" class="container">
+                <h2>Network Algorithm selector</h2>
+                    <select id="networkSelector">
+                        {% for c in networkResults %}
+                        <option>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+
+                 <div id="networkBox" class="container"></div>
+
+            </div>
+
+            <script>
+                var networkResults = {{networkResults | tojson |safe}}
+
+                $('#networkSelector').change(() =>{
+                    var algorithm = ''
+                    $('#networkSelector option:selected').each(function() {
+                        algorithm += $(this).text()
+                    })
+                    Object.keys(networkResults).forEach(function(key) {
+                        if(key == algorithm){
+                            Plotly.newPlot('networkBox', [JSON.parse(networkResults[key])], {
+                                                                              paper_bgcolor: 'rgba(0,0,0,0)',
+                                                                              plot_bgcolor: 'rgba(0,0,0,0)'
+                                                                            })
+                        }
+                    });
+                })
+            </script>
+
+
+
+            <div id="structureGraph" class="chart-container" style="width:55%;height:600px;">
+
+                <svg style="width:100%;height:100%;"></svg>
+                <script type="text/javascript">
+                    var $container = $('#structureGraph');
+                    var a = $container.width()
+                    var b = $container.height()
+
+                    var svg = d3.select("svg"),
+                        width = a,
+                        height = b;
+
+                    var simulation = d3.forceSimulation()
+                        .force("link", d3.forceLink().id(function (d) {
+                            return d.id;
+                            }))
+                        .force("charge", d3.forceManyBody().strength(-650).distanceMin(100))
+                        .force("center", d3.forceCenter(width / 2, height / 2));
+
+                    var graph = {{data |tojson| safe}};
+
+                    svg.select("g").style('transform', 'translate(50%, 50%)')
+
+                    var link = svg.append("g")
+                        .attr("class", "links")
+                        .attr("weight", "weight")
+                        .selectAll("line")
+                        .data(graph.links)
+                        .enter().append("line");
+
+                    var node = svg.append("g")
+                        .attr("class", "nodes")
+                        .selectAll("circle")
+                        .data(graph.nodes)
+                        .enter().append("circle")
+                        .attr("r", 6)
+                        .call(d3.drag()
+                            .on("start", dragstarted)
+                            .on("drag", dragged)
+                            .on("end", dragended));
+
+                    node.append("title")
+                        .attr("dx", 12)
+                        .attr("dy", "0.35em")
+                        .attr("font-size", 15)
+                        .text(function (d) {
+                            return d.id;
+                        });
+
+                    link.attr("stroke-width", function(d){ return d.weight/2; })
+
+                    var labels = svg.append("g")
+                        .attr("class", "label")
+                        .selectAll("text")
+                        .data(graph.nodes)
+                        .enter().append("text")
+                        .attr("dx", 8)
+                        .attr("dy", ".35em")
+                        .style("font-size",8)
+                        .text(function(d) { return d.id });
+
+                    simulation
+                        .nodes(graph.nodes)
+                        .on("tick", ticked);
+
+                    simulation.force("link")
+                        .links(graph.links);
+
+                    function ticked() {
+                        link
+                            .attr("x1", function (d) {
+                            return d.source.x;
+                        })
+                        .attr("y1", function (d) {
+                            return d.source.y;
+                        })
+                        .attr("x2", function (d) {
+                            return d.target.x;
+                        })
+                        .attr("y2", function (d) {
+                            return d.target.y;
+                        });
+
+                    node
+                        .attr("cx", function(d) { return d.x = Math.max(6, Math.min(width - 6, d.x)); })
+                        .attr("cy", function(d) { return d.y = Math.max(6, Math.min(height - 6, d.y)); });
+
+
+                    labels
+                    .attr("x", function(d) { return d.x; })
+                    .attr("y", function(d) { return d.y; });
+                    }
+
+                    function dragstarted(d) {
+                        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                        d.fx = d.x;
+                        d.fy = d.y;
+                        }
+
+                    function dragged(d) {
+                        d.fx = d3.event.x;
+                        d.fy = d3.event.y;
+                    }
+
+                    function dragended(d) {
+                        if (!d3.event.active) simulation.alphaTarget(0);
+                        d.fx = null;
+                        d.fy = null;
+                    }
+
+
+
+                </script>
+            </div>
+
+        </div>
+
+        <div style="clear:both;"></div>
+
+        <div id="characterAnalytics" class="container">
+            <h1>individual Character Analytics</h1>
+            <div id="characterName" class="container">
+                <h2>Character selector</h2>
+                    <select id="characterSelector">
+                        {% for c in names %}
+                        <option>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+            </div>
+
+            <script>
+            var topics = {{ topicData | safe  }}
+            var psychs = {{ psychData | safe }}
+            var archs = {{ archData  | safe }}
+            var names = {{ names | safe }}
+            var texts = {{ texts | safe }}
+
+
+            $('#characterSelector').change(() =>{
+                var charName = ''
+                $('#characterSelector option:selected').each(function() {
+                    charName += $(this).text()
+                })
+                names.forEach((item, index) => {
+                    if(item == charName){
+                        Plotly.newPlot('topicModellingC', [JSON.parse(topics[index])])
+                        Plotly.newPlot('psych', [JSON.parse(psychs[index])])
+                        Plotly.newPlot('arch', [JSON.parse(archs[index])])
+                        $('#textText').text(texts[index])
+                    }
+                })
+            })
+            </script>
+
+            <div class="charts">
+
+                <div id="topicModelling" class="container">
+                    <h2>Topic Signal Modeling </br>--Empath topic Signal Modeling--</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="topicModellingC" class="chart">
+                                <script>
+                                Plotly.plot('topicModellingC', [JSON.parse(topics[0])], {});
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="psychologicalValues" class="container">
+                    <h2>Psychological values</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="chart" id="psych">
+                                <script>
+                                Plotly.plot('psych', [JSON.parse(psychs[0])], {});
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="archetypes" class="container">
+                    <h2>archetype matching</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="arch" class="chart">
+                                <script>
+                                    Plotly.plot('arch', [JSON.parse(archs[0])], {});
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="text" class="container">
+                    <h2>Spoken text</h2>
+                    <div id="textBox" class="container">
+                        <p id="textText">"{{texts[0]}}"</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div style="clear:both;"></div>
+
+<footer class="fixed_footer">
+    <div class="content">
+        <h3>© Nicolas Ruth, Julian Fuchs | 2019</h3>
+        <p class="small">
+            EN: This work was realized as part of the course "Drama Mining und Film-Analyse" (summer semester 2019)
+            under the supervision of Manuel Burghardt and Jochen Tiepmar at the University of Leipzig.</br>
+            DE: Diese Arbeit wurde im Rahmen des Kurses "Drama Mining und Film-Analyse" (Sommersemester 2019) unter der
+            Leitung von Manuel Burghardt und Jochen Tiepmar an der Universität Leipzig realisiert.</br>
+        </p>
+    </div>
+</footer>
+
+
+{% endblock %}
+</body>
+
+
