@@ -6,10 +6,11 @@ This Repo documents the web application of a research concerning the automated a
 The app is meant to be a visualization of the outcome and a tool for own questions and researches.
 
 
-
-
 > **2.6 Web-App and database**
 >The web application was created by using “flask”, “HTML” and “CSS”, “d3”, “jquery” and “plotly”. Concerning the displayed graph, the edges are drawn in relation to the weight. The main feature is built by the underlying relational database which is filled with all the data generated as explained above. Database tables are for example “film”, “character”, “charts”, “network results” etc. The whole database and the app are coded to sustain the extensibility of the database.
+
+The app is a product of various NLP based analyzes that are stored in a SQlite database. Because of copyright issues this database is not included at the moment. The git concerning the analysis will be created soon.
+
 
 > EN: This work was realized as part of the course "Drama Mining und Film-Analyse" (summer semester 2019) under the supervision of Manuel Burghardt and Jochen Tiepmar at the University of Leipzig.
 
